@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Access-Control-Allow-Origin" content="*">
+    <title>Painel de Analise</title>
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js"></script>
+
+</head>
+
+<body>
+    <div class="chart-container" style="position: relative; height:40vh; width:90vw">
+        <canvas id="myChart"></canvas>
+    </div>
+    
+    <script>
+
+        var jqxhr = $.getJSON("http://127.0.0.1:5000/api/v1/google/", function () {
+            console.log("success");
+        })
+            .done(function (datajson) {
+                var ctx = document.getElementById('myChart');
+                var myChart = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: datajson.Date,
+                        datasets: [{
+                            label: 'Ativo: Fechamento',
+                            data: datajson.Close,
+                            borderWidth: 1,
+                            backgroundColor: ['rgba(0, 153, 0, 0.2)'],
+                        },
+                        {
+                            label: 'Ativo: Abertura',
+                            data: datajson.Open,
+                            borderWidth: 1,
+                            backgroundColor: ['rgba(100, 148, 0, 0.2)']
+                        }
+                        ]
+                    },
+                    options: {
+                        scales: {
+                            yAxes: [{
+                                ticks: {
+                                    beginAtZero: false
+                                }
+                            }]
+                        }
+                    }
+                });
+            })
+            .fail(function () {
+                console.log("error");
+            })
+            .always(function () {
+                console.log("complete");
+            });
+
+    </script>
+</body>
+
+</html>
